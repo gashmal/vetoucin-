@@ -12,7 +12,7 @@ class Cart extends Component {
 
 	render() {
 		return (
-			<div className="App movie topMargin ">
+			<div className="App movie topMargin">
 				<div className="row cards large">
 					<Cover
 						url={
