@@ -144,6 +144,17 @@ p {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a:visited {
+  color: inherit;
+}
+
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
@@ -164,4 +175,12 @@ p {
     overflow: hidden;
     height: auto;
   }
+}
+
+.topMargin {
+  padding-top: 120px;
+}
+
+.large {
+  width: 100%;
 }

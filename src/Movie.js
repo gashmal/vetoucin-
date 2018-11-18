@@ -4,6 +4,7 @@ import Cover from "./Cover";
 import Item from "./Item";
 import Subtitle from "./Subtitle";
 import Description from "./Description";
+import { Link } from "react-router-dom";
 
 class Movie extends Component {
 	state = {
@@ -20,24 +21,26 @@ class Movie extends Component {
 		const movieComponents = [];
 		for (let i = 0; i < this.state.movies.length; i++) {
 			movieComponents.push(
-				<li key={i} className="cards">
-					<div className="row">
-						<Cover
-							url={
-								"https://image.tmdb.org/t/p/w600_and_h900_bestv2/" +
-								this.state.movies[i].poster_path
-							}
-						/>
-						<div>
-							<Subtitle text={this.state.movies[i].title} />
-							<Item
-								label="Date de sortie"
-								text={this.state.movies[i].release_date}
+				<li key={this.state.movies[i].id} className="cards">
+					<Link to={"/" + this.state.movies[i].id}>
+						<div className="row">
+							<Cover
+								url={
+									"https://image.tmdb.org/t/p/w600_and_h900_bestv2/" +
+									this.state.movies[i].poster_path
+								}
 							/>
+							<div>
+								<Subtitle text={this.state.movies[i].title} />
+								<Item
+									label="Date de sortie"
+									text={this.state.movies[i].release_date}
+								/>
 
-							<Description text={this.state.movies[i].overview} />
+								<Description text={this.state.movies[i].overview} />
+							</div>
 						</div>
-					</div>
+					</Link>
 				</li>
 			);
 		}
@@ -54,110 +57,114 @@ class Movie extends Component {
 		}
 
 		return (
-			<div className="movie">
-				<ul className="row">
-					<li
-						className={classPop}
-						onClick={() => {
-							this.setState({
-								selectedTab: "popular",
-								pages: 1
-							});
+			<div className="App">
+				<div className="movie ">
+					<ul className="row">
+						<li
+							className={classPop}
+							onClick={() => {
+								this.setState({
+									selectedTab: "popular",
+									pages: 1
+								});
 
-							axios
-								.get("https://api-allocine.herokuapp.com/api/movies/popular")
-								.then(response => {
-									this.setState({
-										movies: response.data.results
+								axios
+									.get("https://api-allocine.herokuapp.com/api/movies/popular")
+									.then(response => {
+										this.setState({
+											movies: response.data.results
+										});
 									});
+							}}
+						>
+							Popular
+						</li>
+						<li
+							className={classUp}
+							onClick={() => {
+								this.setState({
+									selectedTab: "upcoming",
+									pages: 1
 								});
-						}}
-					>
-						Popular
-					</li>
-					<li
-						className={classUp}
-						onClick={() => {
-							this.setState({
-								selectedTab: "upcoming",
-								pages: 1
-							});
 
-							axios
-								.get("https://api-allocine.herokuapp.com/api/movies/upcoming")
-								.then(response => {
-									this.setState({
-										movies: response.data.results
+								axios
+									.get("https://api-allocine.herokuapp.com/api/movies/upcoming")
+									.then(response => {
+										this.setState({
+											movies: response.data.results
+										});
 									});
+							}}
+						>
+							Upcoming
+						</li>
+						<li
+							className={classTr}
+							onClick={() => {
+								this.setState({
+									selectedTab: "top_rated",
+									pages: 1
 								});
-						}}
-					>
-						Upcoming
-					</li>
-					<li
-						className={classTr}
-						onClick={() => {
-							this.setState({
-								selectedTab: "top_rated",
-								pages: 1
-							});
 
-							axios
-								.get("https://api-allocine.herokuapp.com/api/movies/top_rated")
-								.then(response => {
-									this.setState({
-										movies: response.data.results
+								axios
+									.get(
+										"https://api-allocine.herokuapp.com/api/movies/top_rated"
+									)
+									.then(response => {
+										this.setState({
+											movies: response.data.results
+										});
 									});
-								});
-						}}
-					>
-						Top rated
-					</li>
-					<li
-						className="bonhomme next"
-						onClick={() => {
-							axios
-								.get(
-									"https://api-allocine.herokuapp.com/api/movies/" +
-										this.state.selectedTab +
-										"?p=" +
-										(this.state.pages + 1)
-								)
-								.then(response => {
-									this.setState({
-										movies: response.data.results,
-										pages: this.state.pages + 1
-									});
-								});
-						}}
-					>
-						Next
-					</li>
-					<li
-						className="bonhomme next"
-						onClick={() => {
-							if (this.state.pages > 1) {
+							}}
+						>
+							Top rated
+						</li>
+						<li
+							className="bonhomme next"
+							onClick={() => {
 								axios
 									.get(
 										"https://api-allocine.herokuapp.com/api/movies/" +
 											this.state.selectedTab +
 											"?p=" +
-											(this.state.pages - 1)
+											(this.state.pages + 1)
 									)
 									.then(response => {
 										this.setState({
 											movies: response.data.results,
-											pages: this.state.pages - 1
+											pages: this.state.pages + 1
 										});
 									});
-							}
-						}}
-					>
-						Back
-					</li>
-					<li className="bonhomme">Page {this.state.pages}</li>
-				</ul>
-				<ul className="cardContainer">{movieComponents}</ul>
+							}}
+						>
+							Next
+						</li>
+						<li
+							className="bonhomme next"
+							onClick={() => {
+								if (this.state.pages > 1) {
+									axios
+										.get(
+											"https://api-allocine.herokuapp.com/api/movies/" +
+												this.state.selectedTab +
+												"?p=" +
+												(this.state.pages - 1)
+										)
+										.then(response => {
+											this.setState({
+												movies: response.data.results,
+												pages: this.state.pages - 1
+											});
+										});
+								}
+							}}
+						>
+							Back
+						</li>
+						<li className="bonhomme">Page {this.state.pages}</li>
+					</ul>
+					<ul className="cardContainer">{movieComponents}</ul>
+				</div>
 			</div>
 		);
 	}
