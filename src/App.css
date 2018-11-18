@@ -1,7 +1,12 @@
+body {
+  background-color: #FAFAFA;
+}
+
 .App {
   /* text-align: center; */
   width: 80%;
   margin: auto;
+
 }
 
 .App-header {
@@ -13,6 +18,13 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: black;
+  position: fixed;
+  width: 100%;
+  box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.59);
+}
+
+.movie {
+  padding-top: 60px;
 }
 
 .Logo {
@@ -20,19 +32,21 @@
   width: 150px;
 }
 
-.Title {text-align: center;}
+.Title {
+  text-align: center;
+}
 
 .Cover {
   height: 300px;
-  size: border-box;
-  margin:5px;
+
+  margin-right: 10px;
 }
 
 .Cover img {
   height: 100%;
 }
 
-.Item { margin-left:5px;}
+.Item {}
 
 .Label {
   color: #B7B7B7;
@@ -57,34 +71,97 @@
   color: black;
 }
 
-.Subtitle {}
-
-.Description {}
+.Description {
+  max-height: 186px;
+  overflow-y: auto;
+}
 
 .row {
   display: flex;
   flex-direction: row;
+  padding: 0;
+  margin: 0;
 }
 
 button {
-  border:none;
-  border-radius:3px;
+  border: none;
+  border-radius: 3px;
   size: border-box;
-  margin:5px;
-  padding:5px;
+  margin: 5px;
+  padding: 5px;
 }
 
-button:hover{
-  cursor:pointer;
-  box-shadow: 6px 7px 20px -8px rgba(0,0,0,0.78);
+button:hover {
+  cursor: pointer;
+  box-shadow: 6px 7px 20px -8px rgba(0, 0, 0, 0.78);
+}
+
+ul,
+li {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cards {
+  box-shadow: 3px 3px 12px -4px rgba(0, 0, 0, 0.75);
+  box-sizing: border-box;
+  margin: 10px;
+  background-color: white;
+  width: calc(50% - 20px);
+  border-radius: 15px;
+  overflow: hidden;
+  height: 300px;
+}
+
+.bonhomme {
+  margin-right: 45px;
+  margin-top: 10px;
+}
+
+.bonhomme:hover {
+  box-sizing: border-box;
+  cursor: pointer;
+
+  background-color: lightyellow;
+}
+
+.focused {
+  font-weight: bold;
+  border-bottom: #FECC02 5px solid;
+}
+
+.next {
+  color: #FECC02
+}
+
+p {
+  width: 100%;
 }
 
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
   }
+
   .App {
     text-align: center;
     width: 90%;
+  }
+
+  .cards {
+    box-shadow: 3px 3px 12px -4px rgba(0, 0, 0, 0.75);
+    box-sizing: border-box;
+    margin: 5px;
+    background-color: white;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    height: auto;
   }
 }

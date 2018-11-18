@@ -6,12 +6,12 @@ import Movie from "./Movie";
 class App extends React.Component {
 	render() {
 		return (
-			<div >
+			<div>
 				<Header />
-        <div className="App">
-				  <Movie />
-        </div>
-      </div>
+				<div className="App">
+					<Movie />
+				</div>
+			</div>
 		);
 	}
 }

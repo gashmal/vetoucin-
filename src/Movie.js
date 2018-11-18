@@ -1,41 +1,177 @@
-import React from "react";
-import Title from "./Title";
+import React, { Component } from "react";
+import axios from "axios";
 import Cover from "./Cover";
 import Item from "./Item";
-import Button from "./Button";
 import Subtitle from "./Subtitle";
 import Description from "./Description";
 
-class Movie extends React.Component {
+class Movie extends Component {
+	state = {
+		selectedTab: "popular",
+		movies: [],
+		pages: 1
+	};
+
+	dryMyMen = (type, num) => {};
+
 	render() {
+		console.log(this.state.pages);
+
+		const movieComponents = [];
+		for (let i = 0; i < this.state.movies.length; i++) {
+			movieComponents.push(
+				<li key={i} className="cards">
+					<div className="row">
+						<Cover
+							url={
+								"https://image.tmdb.org/t/p/w600_and_h900_bestv2/" +
+								this.state.movies[i].poster_path
+							}
+						/>
+						<div>
+							<Subtitle text={this.state.movies[i].title} />
+							<Item
+								label="Date de sortie"
+								text={this.state.movies[i].release_date}
+							/>
+
+							<Description text={this.state.movies[i].overview} />
+						</div>
+					</div>
+				</li>
+			);
+		}
+
+		let classPop = "bonhomme";
+		let classUp = "bonhomme";
+		let classTr = "bonhomme";
+		if (this.state.selectedTab === "popular") {
+			classPop = "bonhomme focused";
+		} else if (this.state.selectedTab === "upcoming") {
+			classUp = "bonhomme focused";
+		} else {
+			classTr = "bonhomme focused";
+		}
+
 		return (
-			<div>
-				<Title title="2001 : L'odyssée de l'espace" />
-                <div className="row">
-                    <Cover url="http://fr.web.img2.acsta.net/r_1920_1080/pictures/18/05/04/14/53/4306860.jpg" />
-                    <div>
-                        <div className="Items"> 
-                            <Item label="Date de reprise" text="7 mars 2001" />
-                            <Item label="Date de sortie" text="27 septembre 1968" />
-                            <Item label="De" text="Stanley Kubrick" />
-                            <Item
-                                label="Avec"
-                                text="Keir Dullea, Gary Lockwood, William Sylvester"
-                            />
-                            <Item label="Genre" text="Science fiction" />
-                            <Item label="Nationalités" text="Américain, Britanique" />
-                        </div>
-                        <div>
-                            <Button theme="black" text="Bande-Annonce" />
-                            <Button theme="yellow" text="Séances (2)" />
-                            <Button theme="grey" text="Ce film en VOD" />
-                        </div>
-                    </div>
-                </div>
-				<Subtitle text="Synopsis et détails" />
-                <Description text={'A l\'aube de l\'Humanité, dans le désert africain, une tribu de primates subit les assauts répétés d\'une bande rivale, qui lui dispute un point d\'eau. La découverte d\'un monolithe noir inspire au chef des singes assiégés un geste inédit et décisif. Brandissant un os, il passe à l\'attaque et massacre ses adversaires. Le premier instrument est né. En 2001, quatre millions d\'années plus tard, un vaisseau spatial évolue en orbite lunaire au rythme langoureux du "Beau Danube Bleu". A son bord, le Dr. Heywood Floyd enquête secrètement sur la découverte d\'un monolithe noir qui émet d\'étranges signaux vers Jupiter. Dix-huit mois plus tard, les astronautes David Bowman et Frank Poole font route vers Jupiter à bord du Discovery. Les deux hommes vaquent sereinement à leurs tâches quotidiennes sous le contrôle de HAL 9000, un ordinateur exceptionnel doué d\'intelligence et de parole. Cependant, HAL, sans doute plus humain que ses maîtres, commence à donner des signes d\'inquiétude : à quoi rime cette mission et que risque-t-on de découvrir sur Jupiter ?'} />
+			<div className="movie">
+				<ul className="row">
+					<li
+						className={classPop}
+						onClick={() => {
+							this.setState({
+								selectedTab: "popular",
+								pages: 1
+							});
+
+							axios
+								.get("https://api-allocine.herokuapp.com/api/movies/popular")
+								.then(response => {
+									this.setState({
+										movies: response.data.results
+									});
+								});
+						}}
+					>
+						Popular
+					</li>
+					<li
+						className={classUp}
+						onClick={() => {
+							this.setState({
+								selectedTab: "upcoming",
+								pages: 1
+							});
+
+							axios
+								.get("https://api-allocine.herokuapp.com/api/movies/upcoming")
+								.then(response => {
+									this.setState({
+										movies: response.data.results
+									});
+								});
+						}}
+					>
+						Upcoming
+					</li>
+					<li
+						className={classTr}
+						onClick={() => {
+							this.setState({
+								selectedTab: "top_rated",
+								pages: 1
+							});
+
+							axios
+								.get("https://api-allocine.herokuapp.com/api/movies/top_rated")
+								.then(response => {
+									this.setState({
+										movies: response.data.results
+									});
+								});
+						}}
+					>
+						Top rated
+					</li>
+					<li
+						className="bonhomme next"
+						onClick={() => {
+							axios
+								.get(
+									"https://api-allocine.herokuapp.com/api/movies/" +
+										this.state.selectedTab +
+										"?p=" +
+										(this.state.pages + 1)
+								)
+								.then(response => {
+									this.setState({
+										movies: response.data.results,
+										pages: this.state.pages + 1
+									});
+								});
+						}}
+					>
+						Next
+					</li>
+					<li
+						className="bonhomme next"
+						onClick={() => {
+							if (this.state.pages > 1) {
+								axios
+									.get(
+										"https://api-allocine.herokuapp.com/api/movies/" +
+											this.state.selectedTab +
+											"?p=" +
+											(this.state.pages - 1)
+									)
+									.then(response => {
+										this.setState({
+											movies: response.data.results,
+											pages: this.state.pages - 1
+										});
+									});
+							}
+						}}
+					>
+						Back
+					</li>
+					<li className="bonhomme">Page {this.state.pages}</li>
+				</ul>
+				<ul className="cardContainer">{movieComponents}</ul>
 			</div>
 		);
+	}
+
+	// Déclenché en deuxième (juste après le premier render)
+	componentDidMount() {
+		console.log("Did Mount");
+		axios
+			.get("https://api-allocine.herokuapp.com/api/movies/popular")
+			.then(response => {
+				this.setState({
+					movies: response.data.results
+				});
+			});
 	}
 }
 
